@@ -10,19 +10,29 @@ def get_data
 
 	page = Nokogiri::HTML(open("https://coinmarketcap.com/all/views/all/"))   
 
-
 end
 
 
 def extraction_symbol(page)
-		
+	
+	crypto_name_array = []
 	#téléchargement de l'ensemble des symboles
-	crypto_fullname_array = page.xpath('//*[@id]/td[3]')
+	crypto_fullname_array = page.xpath('/html/body/div/div[1]/div[2]/div/div[1]/div/div[2]/div[3]/div/table/tbody/tr')
 
 
 	# conservation du texte
-	crypto_name_array = crypto_fullname_array.map { |string| string.text  }
-	
+	i = 0
+	crypto_fullname_array.each do |string|
+		ticker = string.xpath('./td[3]/div').text
+		
+	    if ticker != ""
+      crypto_name_array << ticker
+      	i += 1
+    	else 
+      	i += 1
+    end
+  end
+	puts crypto_name_array
 
 	return crypto_name_array
 

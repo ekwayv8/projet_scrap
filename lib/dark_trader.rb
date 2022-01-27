@@ -13,42 +13,55 @@ def get_data
 end
 
 
-def extraction_symbol(page)
+def extraction_symbol(market_cap)
 	
 	crypto_name_array = []
 	#téléchargement de l'ensemble des symboles
-	crypto_fullname_array = page.xpath('/html/body/div/div[1]/div[2]/div/div[1]/div/div[2]/div[3]/div/table/tbody/tr')
-
+	crypto_fullname_array = market_cap.xpath('/html/body/div/div[1]/div[2]/div/div[1]/div/div[2]/div[3]/div/table/tbody/tr')
 
 	# conservation du texte
-	i = 0
+	n = 0
 	crypto_fullname_array.each do |string|
 		ticker = string.xpath('./td[3]/div').text
 		
-	    if ticker != ""
-      crypto_name_array << ticker
-      	i += 1
-    	else 
-      	i += 1
-    end
-  end
+		    if ticker != ""
+	      crypto_name_array << ticker
+	      	n += 1
+	    	else 
+	      	n += 1
+    	end
+  	end
 	puts crypto_name_array
 
 	return crypto_name_array
-
 end
 
-def extraction_price(page)
+def extraction_price(price_value)
 	
+	crypto_price_array = []	
 
 	#Téléchargement de l'ensemble des prix
-	crypto_fullprice_array = page.xpath('//*[@id]/td[5]/a')
+	crypto_fullprice_array = price_value.xpath('/html/body/div/div[1]/div[2]/div/div[1]/div/div[2]/div[3]/div/table/tbody/tr')
 
 
 	# conservation des prix
-	crypto_price_array = crypto_fullprice_array.map { |price| price.text  }
-		
+	j = 0
 
+	  crypto_fullprice_array.each do |crypto_value|
+	    price = crypto_value.xpath('./td[5]/div/a').text
+	      
+	    if price != ""
+	      crypto_price_array << price
+	      j += 1
+	    else
+	      j += 1
+	    end
+	end
+
+	
+	#crypto_price_array = crypto_fullprice_array.map { |price| price.text  }
+		
+puts crypto_price_array
 	return crypto_price_array
 
 end
@@ -82,7 +95,7 @@ def perform
 	extraction_symbol(page)
 	crypto_array = crypto(crypto_name_array,crypto_price_array)
 	
-	puts  "Vous avez collectés #{crypto_array.size} entrées"
+	puts  "Vous avez collectés #{crypto_array.size} entrées tickers + prix"
 
 	
 	crypto_array
